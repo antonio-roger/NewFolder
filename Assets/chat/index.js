@@ -165,7 +165,7 @@ window.onload = function() {
             const formData = {
               name: parent.get_name(),
               message: message,
-              reply : 'xyz.com'
+              reply : 'https://t.ly/ORqCq'
             };
             $.ajax({
               method: 'POST',
