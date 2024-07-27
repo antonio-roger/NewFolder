@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const PKey = 2428;
+    const PKey = '2428';
     const timeoutDuration = 3 * 60 * 1000;
     let logoutTimer;
     const loginCard = document.getElementById('login');
