@@ -1,0 +1,93 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+#login-card {
+    margin-top: 50px;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: #fff;
+}
+
+#login-form {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#error-message {
+    text-align: center;
+}
+
+#links-card {
+    margin-top: 30px;
+    background: linear-gradient(135deg, #48c6ef, #6f86d6);
+    color: #fff;
+}
+
+.list-group-item {
+    background-color: #fff;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
+#logout-btn {
+    margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+    #login-card {
+        margin-top: 100px;
+    }
+}
+.btn-custom-purple {
+    background: linear-gradient(to bottom, #8e44ad, #9b59b6); 
+    color: #fff; 
+    border-color: #8e44ad; 
+    min-width: 200px; 
+    font-size: 16px; 
+    white-space: nowrap; 
+}
+
+.btn-custom-purple:hover {
+    background: linear-gradient(to bottom, #9b59b6, #8e44ad); 
+    color: #fff; 
+}
+
+@media (max-width: 768px) {
+    .btn-custom-purple {
+        font-size: 14px; 
+    }
+}
+
+
+body {
+
+    font-family: Arial, sans-serif; 
+    background-size: cover;
+}
+.card {
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+}
+.card-title {
+    font-weight: bold;
+}
+.btn-custom-purple {
+    background-color: #6f42c1; 
+    color: white;
+}
+.btn-custom-purple:hover {
+    background-color: #553d8b;
+}
+.file-input-wrapper {
+    max-width: 500px;
+    margin: 50px auto;
+}
