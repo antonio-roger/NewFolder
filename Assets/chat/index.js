@@ -43,7 +43,7 @@ window.onload = function() {
       join_button_container.setAttribute('id', 'join_button_container');
       var join_button = document.createElement('button');
       join_button.setAttribute('id', 'join_button');
-      join_button.innerHTML = 'Join <i class="fas fa-sign-in-alt"></i>';
+      join_button.innerHTML = 'Join   <i class="fas fa-sign-in-alt"></i>';
       var join_input_container = document.createElement('div');
       join_input_container.setAttribute('id', 'join_input_container');
       var join_input = document.createElement('input');
@@ -99,7 +99,7 @@ window.onload = function() {
       var chat_input_send = document.createElement('button');
       chat_input_send.setAttribute('id', 'chat_input_send');
       chat_input_send.setAttribute('disabled', true);
-      chat_input_send.innerHTML = '<h6>SEND</h6>';
+      chat_input_send.innerHTML = '<i class="fas fa-paper-plane"></i>';
       var chat_input = document.createElement('input');
       chat_input.setAttribute('id', 'chat_input');
       chat_input.setAttribute('maxlength', 10000);
