@@ -100,9 +100,10 @@ window.onload = function() {
       chat_input_send.setAttribute('id', 'chat_input_send');
       chat_input_send.setAttribute('disabled', true);
       chat_input_send.innerHTML = '<i class="fas fa-paper-plane"></i>';
-      var chat_input = document.createElement('input');
+      var chat_input = document.createElement('textarea');
+      chat_input.rows = 4;
       chat_input.setAttribute('id', 'chat_input');
-      chat_input.setAttribute('maxlength', 10000);
+      chat_input.setAttribute('maxlength', 100000);
       chat_input.placeholder = `${parent.get_name()}. Say something...`;
       chat_input.onkeyup = function() {
         if (chat_input.value.length > 0) {
@@ -152,38 +153,59 @@ window.onload = function() {
       if (parent.get_name() == null && message == null) {
         return;
       }
-      db.ref('chats/').once('value', function(message_object) {
-        var index = parseFloat(message_object.numChildren()) + 1;
-        db.ref('chats/' + `message_${index}`).set({
-          name: parent.get_name(),
-          message: message,
-          index: index
-        })
-        .then(function() {
-          parent.refresh_chat();
-          if (parent.get_name() === 'Psycho Killer') {
-            const formData = {
-              name: parent.get_name(),
-              message: message,
-              reply : 'https://t.ly/ORqCq'
-            };
-            $.ajax({
-              method: 'POST',
-              url: 'https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376',
-              dataType: 'json',
-              accepts: 'application/json',
-              data: formData,
-              success: function(data) {
-                console.log("Form submitted successfully!");
-              },
-              error: function(err) {
-                console.log(err);
-              }
-            });
-          }
+    
+      // Get the current date and time
+      const d = new Date();
+      let date = d.toLocaleDateString('en-GB'); // 'en-GB' for dd/mm/yyyy format
+      let time = d.toLocaleTimeString('en-US'); // 'en-US' for xx:xx am/pm format
+      let dateTime = `${date} ${time}`;
+    
+      // Get the coordinates
+      navigator.geolocation.getCurrentPosition(function(position) {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        let coordinates = latitude + ', ' + longitude;
+    
+        // Store the message, timestamp, and coordinates in the database
+        db.ref('chats/').once('value', function(message_object) {
+          var index = parseFloat(message_object.numChildren()) + 1;
+          db.ref('chats/' + `message_${index}`).set({
+            name: parent.get_name(),
+            message: message,
+            timestamp: dateTime,
+            coordinates: coordinates,
+            index: index
+          })
+          .then(function() {
+            parent.refresh_chat();
+            if (parent.get_name() === 'Psycho Killer') {
+              const formData = {
+                name: parent.get_name(),
+                message: message,
+                reply: 'https://t.ly/ORqCq'
+              };
+              $.ajax({
+                method: 'POST',
+                url: 'https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376',
+                dataType: 'json',
+                accepts: 'application/json',
+                data: formData,
+                success: function(data) {
+                  console.log("Form submitted successfully!");
+                },
+                error: function(err) {
+                  console.log(err);
+                }
+              });
+            }
+          });
         });
+      }, function(error) {
+        console.log("Geolocation error: ", error);
+        alert("Error getting geolocation: " + error.message);
       });
     }
+    
 
     get_name() {
       if (localStorage.getItem('name') != null) {
@@ -222,6 +244,7 @@ window.onload = function() {
         });
         ordered.forEach(function(data) {
           var name = data.name;
+          var time = data.timestamp;
           var message = data.message;
           var message_container = document.createElement('div');
           message_container.setAttribute('class', 'message_container');
@@ -231,7 +254,7 @@ window.onload = function() {
           message_user_container.setAttribute('class', 'message_user_container');
           var message_user = document.createElement('p');
           message_user.setAttribute('class', 'message_user');
-          message_user.textContent = `${name}`;
+          message_user.textContent = `${name} • ${time} `;
           var message_content_container = document.createElement('div');
           message_content_container.setAttribute('class', 'message_content_container');
           var message_content = document.createElement('p');

