@@ -171,8 +171,9 @@ body {
 #chat_logout_container {
   width: 100%;
   display: flex;
+  align-self: stretch;
   justify-content: center;
-  margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 #chat_logout {
