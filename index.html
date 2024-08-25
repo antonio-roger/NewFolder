@@ -2,79 +2,140 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PSG TECH STUDZONE</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PSG Student Zone-Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="Assets/script.js"></script>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/e/eb/PSG_College_of_Technology_logo.png?20190531125808" style="background-color: white;" type="image/ico">
     <link rel="stylesheet" href="Assets/style.css">
 </head>
 <body>
-    <div class="container d-flex justify-content-center align-items-center vh-100">
-        <div class="text-center">
-            <div id="login" class="card p-4">
-                <div class="card-body">
-                    <h5 class="card-title">Login</h5>
-                    <form autocomplete="off">
-                        <div class="form-group">
-                            <input type="password" class="form-control" id="password" placeholder="Enter Password" autocomplete="off">
-                        </div>
-                        <button class="btn btn-primary btn-block" type="submit">Submit</button>
-                        <p id="error-message" class="text-danger mt-2"></p>
-                    </form>
-                    <button id="redirect-btn" class="btn btn-outline-danger btn-block mt-4">
-                    <i class="fas fa-sign-out-alt ml-2"></i>
+    <div id="wrapper">
+        <div id="in_wrapper1">
+            <div id="headd">
+                <div id="headerleft">
+                    <img id="psgtechlogo" src="https://upload.wikimedia.org/wikipedia/en/e/eb/PSG_College_of_Technology_logo.png?20190531125808" alt="PSG Tech Logo" style=" background-color: white; width: 14.5%;height:70%;">
+                    PSG College of Technology
                 </div>
+                <div id="headerright"></div>
             </div>
-            <div id="links" class="card shadow p-4" style="display: none; background-color: rgba(255, 255, 255, 0.888); max-width: 50vh;">
-                <div class="card-body" style="overflow: scroll;">
-                    <h5 style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Feedback Submission</h5>
-                    <form id="feedback-form" method="POST">
-                        <div class="form-group">
-                            <textarea name="message" class="form-control" autocomplete="off" placeholder="Your Feedback" rows="3" required></textarea>
-                        </div>
-                        <div class="alert alert-info" role="alert" style="font: 0.75em sans-serif;">
-                            Responses take a few minutes to reach our Admin.<br>
-                            Abrupt exit will result failure in mail delivery.<br>
-                            This site does not have any encryption.<br>
-                            Please do not share personal information.
-                        </div>
-                        <button type="submit" class="btn btn-outline-danger btn-block mt-4">Submit Form</button>
-                    </form>
-                    <div class="alert alert-info" role="alert" style="margin-top: 2%; font: 0.75em sans-serif;">
-                        <p>This Site will expire in 3 minutes. You'll also be logged out if you use any link or submit feedback for security reasons. Ensure logging out and clear your browser log after use.</p>
-                    </div>
-                    <h5 class="card-title mb-4">Your Links</h5>
-                    <div class="icon-grid">
-                        <a href="https://wa.link/fbnrwv" class="icon btn-custom-purple" target="_blank">
+            <div id="navigation">
+                <marquee id="marquee_head" behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">Welcome to Students Zone! </marquee>  
+            </div>
+            <div id="templatemo_menu_wrapper">
+                <div id="templatemo_menu">
+                <div id="quickLinksContainer" class="float-right mt-3 mr-3 ">
+                    <button id="quickLinksButton" class="btn btn-secondary" style="margin: 10px;">Quick Links</button>
+                    <div id="quickLinksMenu">
+                        <span id="closeQuickLinksMenu" style="display: inline-block; cursor: pointer; text-align: right; width: 100%;">
+                            <i class="fas fa-times"></i>
+                        </span>
+                        <a id="waLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #25D366, #4CAF50);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
                             <i class="fab fa-whatsapp"></i>
                         </a>
-                        <a href="https://t.me/a2802p" class="icon btn-custom-purple" target="_blank">
+                        <a id="telegramLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #0088cc, #005f99);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
                             <i class="fab fa-telegram"></i>
                         </a>
-                        <a href="mailto:krithuudhayakumar24@gmail.com" class="icon btn-custom-purple" target="_blank">
+                        <a id="emailLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #EA4335, #C5221F);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
                             <i class="fas fa-envelope"></i>
                         </a>
-                        <a href="https://tiny.cc/2428" class="icon btn-custom-purple" target="_blank">
+                        <a id="youtubeLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #FF0000, #D32F2F);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
                             <i class="fab fa-youtube"></i>
                         </a>
-                        <a href="Assets/chat/chat.html" class="icon btn-custom-purple">
-                            <i class="fa fa-comments"></i>
+                        <a id="chatLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #4CAF50, #388E3C);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
+                            <i class="fas fa-comments"></i>
                         </a>
-                        <a href="https://www.instagram.com/smritiaksh" class="icon btn-custom-purple" target="_blank">
+                        <a id="instagramLink" href="#" onclick="auth(event, this)" style="
+                            background: linear-gradient(45deg, #f3ec78, #af4261);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;">
                             <i class="fab fa-instagram"></i>
                         </a>
                     </div>
-                    <button id="logout-btn" class="btn btn-outline-danger btn-block mt-4">
-                        Logout <i class="fas fa-sign-out-alt ml-2"></i>
-                    </button>
+                    <table style="color: White; font-size: 14px; font-weight: bold; line-height: 2.0em; margin-top: 10%;">
+                        <tr>
+                            <td>
+                                <input type="radio" name="userType" id="student"  checked>
+                                <label for="student">Student</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" name="userType" id="externalCandidate">
+                                <label for="externalCandidate">External Candidate</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" name="userType" id="staff">
+                                <label for="staff">Staff</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" name="userType" id="parent">
+                                <label for="parent">Parent</label>
+                            </td>
+                        </tr>
+                    </table>
+                    
                 </div>
             </div>
+            </div>
+            <div style="border: white 4px; " id="content">
+                <div id="wowslider-container1">
+                    <center >   
+                        <div style="border: 3px solid white;  text-align: center; padding: 40px;padding-bottom: 60px;">
+                        <span id="lblnamlog" style="color:Yellow;font-size:Medium;font-weight:bold;text-decoration:underline;">Student Login </span><br><br><br><br><br>
+                        <form id="feedback-form" method="POST">
+                            <table align="center" width="70%">
+                                <tr>
+                                    <td><span style="color:White;font-size:Medium;font-weight:bold;">Rollno</span></td>
+                                    <td><input  maxlength="0" class="txtmar" autocomplete="off"></td>
+                                </tr>
+                                <tr>
+                                    <td><span autocapitalize="on" autocomplete="off" style="color:White;font-size:Medium;font-weight:bold;">Password</span></td>
+                                    <td>
+                                        <div class="form-group">
+                                          
+                                            <input autocomplete="off" name="Message" id="feedbackForm" placeholder="  Type here..." class="txtmar"  rows="1" required></input>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br>
+                            <input type="submit" name="submit" value="Submit" style="color:Black;font-size:Medium;font-weight:bold;width:100px;">
+                            <br><br>
+                            <a href="https://ecampus.psgtech.ac.in/studzone2/" style="color:Gold;font-size:Medium;font-weight:bold;text-decoration:underline;">Forgot Password?</a>
+                        </form>
+                    </div>
+                </center>
+                </div>
+            </div>
+            <div id="footer">
+                <p>&nbsp;</p>
+            </div>
+        </div>
+        <br>
+        <div id="Div1" class="footer">
+            <p style="text-align: center; padding-top: 10px;">Copyright © 2016 Powered by PSG Software Development Centre</p>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="Assets/script.js"></script>
 </body>
 </html>

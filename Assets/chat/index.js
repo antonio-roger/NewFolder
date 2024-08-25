@@ -50,6 +50,7 @@ window.onload = function() {
       join_input.setAttribute('id', 'join_input');
       join_input.setAttribute('maxlength', 15);
       join_input.placeholder = 'Enter Your Private Key';
+      join_input.type = 'password';
       join_input.onkeyup = function() {
         const joinValue = join_input.value;
         if (joinValue == '2428') {
@@ -132,7 +133,8 @@ window.onload = function() {
       chat_logout.onclick = function() {
         localStorage.clear();
         parent.home();
-        window.location.href = "chat.html";
+        window.location.assign("/index.html")
+
       };
 
       chat_logout_container.append(chat_logout);
