@@ -153,17 +153,21 @@
             }
         }
 
-        const d = new Date();
-        let time = d.toLocaleTimeString();
 
         function handleFeedbackForm() {
             const feedbackForm = document.getElementById('feedback-form');
+            const d = new Date();
+                let time = d.toLocaleTimeString();
             if (feedbackForm) {
+                const d = new Date();
+                let time = d.toLocaleTimeString();
                 feedbackForm.addEventListener('submit', function(event) {
                     event.preventDefault();
                     const formData = new FormData(feedbackForm); 
                     feedbackForm.reset(); 
                     formData.append('Time', time); 
+                    const d = ''
+                    let time = ''
                     fetch('https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376', {
                         method: 'POST',
                         body: formData,

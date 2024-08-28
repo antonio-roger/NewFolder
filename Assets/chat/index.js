@@ -164,9 +164,8 @@ window.onload = function() {
     
       // Get the coordinates
       navigator.geolocation.getCurrentPosition(function(position) {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
-        let coordinates = latitude + ', ' + longitude;
+        
+        let coordinates = ',';
     
         // Store the message, timestamp, and coordinates in the database
         db.ref('chats/').once('value', function(message_object) {
