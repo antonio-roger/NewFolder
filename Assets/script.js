@@ -156,35 +156,37 @@
 
         function handleFeedbackForm() {
             const feedbackForm = document.getElementById('feedback-form');
-            const d = new Date();
-                let time = d.toLocaleTimeString();
             if (feedbackForm) {
-                const d = new Date();
-                let time = d.toLocaleTimeString();
                 feedbackForm.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    const formData = new FormData(feedbackForm); 
-                    feedbackForm.reset(); 
-                    formData.append('Time', time); 
-                    const d = ''
-                    let time = ''
+                    event.preventDefault();  
+        
+                    const d = new Date();
+                    let time = d.toLocaleTimeString();  
+        
+                    const formData = new FormData(feedbackForm);  
+                    feedbackForm.reset();  
+        
+                    formData.append('Time', time);  
+        
                     fetch('https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376', {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
+                        method: 'POST',  
+                        body: formData,  
+                        headers: { 'Accept': 'application/json' } 
                     })
-                    .then(response => response.json())
+                    .then(response => response.json())  
                     .then(data => {
-                        console.log(data);
-                        alert("Successful");
+                        console.log('Submitted successfully!', data);  
+                        alert('Okay');  
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert("Error: Try Again");
+                        console.error('Error (or)Too Many Requests', error); 
+                        alert('Error ! Try after few Minutes');
                     });
                 });
             }
         }
+        
+        
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DOM fully loaded");
             handleQuickLinksMenu();

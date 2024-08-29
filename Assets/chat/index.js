@@ -8,19 +8,27 @@ window.onload = function() {
     messagingSenderId: "204295948071",
     appId: "1:204295948071:web:ffec65a674deacf8bacb02",
     measurementId: "G-6T660Q4CL9"
-};
+  };
+
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database();
+
   class MEME_CHAT {
+    constructor() {
+      this.chatListener = null;
+    }
+
     home() {
       document.body.innerHTML = '';
       this.create_title();
       this.create_join_form();
     }
+
     chat() {
       this.create_title();
       this.create_chat();
     }
+
     create_title() {
       var title_container = document.createElement('div');
       title_container.setAttribute('id', 'title_container');
@@ -28,11 +36,12 @@ window.onload = function() {
       title_inner_container.setAttribute('id', 'title_inner_container');
       var title = document.createElement('h1');
       title.setAttribute('id', 'title');
-      title.textContent = '';
+      title.textContent = 'Meme Chat';
       title_inner_container.append(title);
       title_container.append(title_inner_container);
       document.body.append(title_container);
     }
+
     create_join_form() {
       var parent = this;
       var join_container = document.createElement('div');
@@ -73,6 +82,7 @@ window.onload = function() {
       join_container.append(join_inner_container);
       document.body.append(join_container);
     }
+
     create_load(container_id) {
       var container = document.getElementById(container_id);
       container.innerHTML = '';
@@ -83,6 +93,7 @@ window.onload = function() {
       loader_container.append(loader);
       container.append(loader_container);
     }
+
     create_chat() {
       var parent = this;
       var title_container = document.getElementById('title_container');
@@ -133,8 +144,7 @@ window.onload = function() {
       chat_logout.onclick = function() {
         localStorage.clear();
         parent.home();
-        window.location.assign("/index.html")
-
+        window.location.assign("/index.html");
       };
 
       chat_logout_container.append(chat_logout);
@@ -152,61 +162,65 @@ window.onload = function() {
 
     send_message(message) {
       var parent = this;
-      if (parent.get_name() == null && message == null) {
+      if (parent.get_name() == null || message == null) {
         return;
       }
-    
+
       // Get the current date and time
       const d = new Date();
-      let date = d.toLocaleDateString('en-GB'); // 'en-GB' for dd/mm/yyyy format
-      let time = d.toLocaleTimeString('en-US'); // 'en-US' for xx:xx am/pm format
+      let date = d.toLocaleDateString('en-GB');
+      let time = d.toLocaleTimeString('en-US');
       let dateTime = `${date} ${time}`;
-    
-      // Get the coordinates
-      navigator.geolocation.getCurrentPosition(function(position) {
-        
-        let coordinates = ',';
-    
-        // Store the message, timestamp, and coordinates in the database
-        db.ref('chats/').once('value', function(message_object) {
-          var index = parseFloat(message_object.numChildren()) + 1;
-          db.ref('chats/' + `message_${index}`).set({
-            name: parent.get_name(),
-            message: message,
-            timestamp: dateTime,
-            coordinates: coordinates,
-            index: index
-          })
-          .then(function() {
-            parent.refresh_chat();
-            if (parent.get_name() === 'Psycho Killer') {
-              const formData = {
-                name: parent.get_name(),
-                message: message,
-                reply: 'https://t.ly/ORqCq'
-              };
-              $.ajax({
-                method: 'POST',
-                url: 'https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376',
-                dataType: 'json',
-                accepts: 'application/json',
-                data: formData,
-                success: function(data) {
-                  console.log("Form submitted successfully!");
-                },
-                error: function(err) {
-                  console.log(err);
-                }
-              });
-            }
-          });
+
+      db.ref('chats/').once('value', function (message_object) {
+        var index = parseFloat(message_object.numChildren()) + 1;
+        db.ref('chats/' + `message_${index}`).set({
+          name: parent.get_name(),
+          message: message,
+          timestamp: dateTime,
+          index: index
+        })
+        .then(function () {
+          console.log("Message sent successfully");
+          // No need to call refresh_chat() here as the listener will handle updates
+
+          if (parent.get_name() === 'Psycho Killer') {
+            const formData = {
+              name: parent.get_name(),
+              message: message,
+              reply: 'https://t.ly/ORqCq'
+            };
+
+            fetch('https://formsubmit.co/ajax/028c0178033f578a8d3a6d57b4d06376', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Form submitted successfully!', data))
+            .catch(error => console.error('Error submitting form:', error));
+          }
+        })
+        .catch(function(error) {
+          console.error("Error sending message:", error);
         });
-      }, function(error) {
-        console.log("Geolocation error: ", error);
-        alert("Error getting geolocation: " + error.message);
       });
+    }    
+
+    delete_message(index) {
+      var parent = this;
+      db.ref('chats/message_' + index).remove()
+        .then(function() {
+          console.log('Message deleted successfully');
+          // No need to call refresh_chat() here as the listener will handle updates
+        })
+        .catch(function(error) {
+          console.error('Error deleting message:', error);
+        });
     }
-    
 
     get_name() {
       if (localStorage.getItem('name') != null) {
@@ -216,63 +230,76 @@ window.onload = function() {
         return null;
       }
     }
+
     refresh_chat() {
+      var parent = this;
       var chat_content_container = document.getElementById('chat_content_container');
-      db.ref('chats/').on('value', function(messages_object) {
+
+      if (parent.chatListener) {
+        parent.chatListener();
+      }
+
+      parent.chatListener = db.ref('chats/').on('value', function(messages_object) {
         chat_content_container.innerHTML = '';
         if (messages_object.numChildren() == 0) {
           return;
         }
+
         var messages = Object.values(messages_object.val());
-        var guide = [];
-        var unordered = [];
-        var ordered = [];
-        for (var i = 0; i < messages.length; i++) {
-          guide.push(i + 1);
-          unordered.push([messages[i], messages[i].index]);
-        }
-        guide.forEach(function(key) {
-          var found = false;
-          unordered = unordered.filter(function(item) {
-            if (!found && item[1] == key) {
-              ordered.push(item[0]);
-              found = true;
-              return false;
-            } else {
-              return true;
-            }
-          });
-        });
+        var ordered = messages.sort((a, b) => a.index - b.index);
+
         ordered.forEach(function(data) {
           var name = data.name;
-          var time = data.timestamp;
           var message = data.message;
+          var timestamp = data.timestamp;
+          var index = data.index;
+
           var message_container = document.createElement('div');
           message_container.setAttribute('class', 'message_container');
+
           var message_inner_container = document.createElement('div');
           message_inner_container.setAttribute('class', 'message_inner_container');
+
           var message_user_container = document.createElement('div');
           message_user_container.setAttribute('class', 'message_user_container');
+
           var message_user = document.createElement('p');
           message_user.setAttribute('class', 'message_user');
-          message_user.textContent = `${name} • ${time} `;
+          message_user.textContent = `${name} ${timestamp}`;
+
           var message_content_container = document.createElement('div');
           message_content_container.setAttribute('class', 'message_content_container');
+
           var message_content = document.createElement('p');
+          message_content.setAttribute('class', 'message_content');
           message_content.textContent = `${message}`;
-          message_user_container.append(message_user);
+
+          var message_delete_container = document.createElement('div');
+          message_delete_container.setAttribute('class', 'message_delete_container');
+
+          var message_delete_icon = document.createElement('span');
+          message_delete_icon.setAttribute('class', 'message_delete_icon');
+          message_delete_icon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+          message_delete_icon.onclick = function() {
+            parent.delete_message(index);
+          };
+
+          
           message_content_container.append(message_content);
-          message_inner_container.append(message_user_container, message_content_container);
+          message_delete_container.append(message_delete_icon);
+          message_user_container.append(message_user, message_delete_container);
+          message_inner_container.append(message_user_container, message_content_container,);
           message_container.append(message_inner_container);
           chat_content_container.append(message_container);
         });
+
         chat_content_container.scrollTop = chat_content_container.scrollHeight;
       });
     }
   }
+
   var app = new MEME_CHAT();
   if (app.get_name() != null) {
-    localStorage.clear();
-    window.location.href = "chat.html";
+    app.chat();
   }
 };
