@@ -13,6 +13,7 @@ window.onload = function() {
   firebase.initializeApp(firebaseConfig);
   var db = firebase.database();
 
+  
   class MEME_CHAT {
     constructor() {
       this.chatListener = null;
@@ -306,6 +307,10 @@ window.onload = function() {
     }
   }    
 
+  window.addEventListener('beforeunload', function() {
+    localStorage.clear(); 
+    parent.home();
+  });
   var app = new MEME_CHAT();
   if (app.get_name() != null) {
     app.chat();
