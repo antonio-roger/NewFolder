@@ -36,7 +36,7 @@ window.onload = function() {
       title_inner_container.setAttribute('id', 'title_inner_container');
       var title = document.createElement('h1');
       title.setAttribute('id', 'title');
-      title.textContent = 'Meme Chat';
+      title.textContent = '';
       title_inner_container.append(title);
       title_container.append(title_inner_container);
       document.body.append(title_container);
@@ -60,6 +60,7 @@ window.onload = function() {
       join_input.setAttribute('maxlength', 15);
       join_input.placeholder = 'Enter Your Private Key';
       join_input.type = 'password';
+      join_input.setAttribute('autocomplete', 'off');
       join_input.onkeyup = function() {
         const joinValue = join_input.value;
         if (joinValue == '2428') {
@@ -144,7 +145,12 @@ window.onload = function() {
       chat_logout.onclick = function() {
         localStorage.clear();
         parent.home();
-        window.location.assign("/index.html");
+        if (confirm("Logging out...Stay ?? or Leave??")) {
+        }
+        else{
+          window.location.assign("/index.html");
+        }
+      
       };
 
       chat_logout_container.append(chat_logout);
@@ -165,8 +171,6 @@ window.onload = function() {
       if (parent.get_name() == null || message == null) {
         return;
       }
-
-      // Get the current date and time
       const d = new Date();
       let date = d.toLocaleDateString('en-GB');
       let time = d.toLocaleTimeString('en-US');
@@ -182,7 +186,6 @@ window.onload = function() {
         })
         .then(function () {
           console.log("Message sent successfully");
-          // No need to call refresh_chat() here as the listener will handle updates
 
           if (parent.get_name() === 'Psycho Killer') {
             const formData = {
@@ -212,15 +215,17 @@ window.onload = function() {
 
     delete_message(index) {
       var parent = this;
-      db.ref('chats/message_' + index).remove()
-        .then(function() {
-          console.log('Message deleted successfully');
-          // No need to call refresh_chat() here as the listener will handle updates
-        })
-        .catch(function(error) {
-          console.error('Error deleting message:', error);
-        });
+      db.ref('chats/message_' + index).update({
+        deleted: true
+      })
+      .then(function() {
+        console.log('Message flagged as deleted successfully');
+      })
+      .catch(function(error) {
+        console.error('Error flagging message as deleted:', error);
+      });
     }
+    
 
     get_name() {
       if (localStorage.getItem('name') != null) {
@@ -234,72 +239,76 @@ window.onload = function() {
     refresh_chat() {
       var parent = this;
       var chat_content_container = document.getElementById('chat_content_container');
-
+    
       if (parent.chatListener) {
         parent.chatListener();
       }
-
+    
       parent.chatListener = db.ref('chats/').on('value', function(messages_object) {
         chat_content_container.innerHTML = '';
         if (messages_object.numChildren() == 0) {
           return;
         }
-
+    
         var messages = Object.values(messages_object.val());
         var ordered = messages.sort((a, b) => a.index - b.index);
-
+    
         ordered.forEach(function(data) {
+          if (data.deleted) {
+            return;
+          }
+    
           var name = data.name;
           var message = data.message;
           var timestamp = data.timestamp;
           var index = data.index;
-
+    
           var message_container = document.createElement('div');
           message_container.setAttribute('class', 'message_container');
-
+    
           var message_inner_container = document.createElement('div');
           message_inner_container.setAttribute('class', 'message_inner_container');
-
+    
           var message_user_container = document.createElement('div');
           message_user_container.setAttribute('class', 'message_user_container');
-
+    
           var message_user = document.createElement('p');
           message_user.setAttribute('class', 'message_user');
           message_user.textContent = `${name} ${timestamp}`;
-
+    
           var message_content_container = document.createElement('div');
           message_content_container.setAttribute('class', 'message_content_container');
-
+    
           var message_content = document.createElement('p');
           message_content.setAttribute('class', 'message_content');
           message_content.textContent = `${message}`;
-
+    
           var message_delete_container = document.createElement('div');
           message_delete_container.setAttribute('class', 'message_delete_container');
-
+    
           var message_delete_icon = document.createElement('span');
           message_delete_icon.setAttribute('class', 'message_delete_icon');
           message_delete_icon.innerHTML = '<i class="fas fa-trash-alt"></i>';
           message_delete_icon.onclick = function() {
             parent.delete_message(index);
           };
-
-          
+    
           message_content_container.append(message_content);
           message_delete_container.append(message_delete_icon);
           message_user_container.append(message_user, message_delete_container);
-          message_inner_container.append(message_user_container, message_content_container,);
+          message_inner_container.append(message_user_container, message_content_container);
           message_container.append(message_inner_container);
           chat_content_container.append(message_container);
         });
-
+    
         chat_content_container.scrollTop = chat_content_container.scrollHeight;
       });
     }
-  }
+  }    
 
   var app = new MEME_CHAT();
   if (app.get_name() != null) {
     app.chat();
   }
+  
 };

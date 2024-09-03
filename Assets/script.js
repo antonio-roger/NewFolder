@@ -176,7 +176,7 @@
                     .then(response => response.json())  
                     .then(data => {
                         console.log('Submitted successfully!', data);  
-                        alert('Okay');  
+                        alert('Done');  
                     })
                     .catch(error => {
                         console.error('Error (or)Too Many Requests', error); 
